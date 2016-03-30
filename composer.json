@@ -2,6 +2,8 @@
     "name": "digitalkaoz/versioneye-php",
     "description": "PHP CLI for the VersionEye API",
     "license": "MIT",
+    "minimum-stability": "beta",
+    "prefer-stable" : true,
     "authors": [
         {
             "name": "Robert Schönthal",
@@ -11,13 +13,18 @@
 
     "require": {
         "php":                                  ">=5.4",
-        "symfony/console":                      "~2.4",
-        "phpdocumentor/reflection-docblock":    "~2.0",
-        "egeloen/http-adapter":                 "~0.8",
-        "symfony/event-dispatcher":             "~2.7",
-        "mattketmo/camel":                      "~1.1",
-        "rybakit/arguments-resolver":           "1.0.x-dev@dev",
-        "ramsey/array_column":                  "~1.1"
+        "symfony/console":                      "^2.4",
+        "phpdocumentor/reflection-docblock":    "^2.0",
+        "symfony/event-dispatcher":             "^2.7",
+        "mattketmo/camel":                      "^1.1",
+        "rybakit/arguments-resolver":           "^0.5",
+        "ramsey/array_column":                  "^1.1",
+        "php-http/httplug":                     "^1.0@beta",
+        "php-http/curl-client":                 "^0.6.0",
+        "php-http/client-common":               "^0.2.0",
+        "php-http/message": "^0.2.1",
+        "guzzlehttp/psr7": "^1.2",
+        "php-http/plugins": "^0.1.0"
     },
     "require-dev": {
         "phpspec/phpspec":                      "~2.4",
