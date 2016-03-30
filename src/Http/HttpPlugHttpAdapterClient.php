@@ -6,6 +6,8 @@ use GuzzleHttp\Psr7\LazyOpenStream;
 use GuzzleHttp\Psr7\MultipartStream;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception\HttpException as PlugException;
+use Http\Client\HttpClient as PlugClient;
+use Http\Discovery\StreamFactoryDiscovery;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -23,10 +25,10 @@ class HttpPlugHttpAdapterClient implements HttpClient
     private $url;
 
     /**
-     * @param HttpMethodsClient $adapter
-     * @param string               $url
+     * @param PlugClient $adapter
+     * @param string     $url
      */
-    public function __construct(HttpMethodsClient $adapter, $url)
+    public function __construct(PlugClient $adapter, $url)
     {
         $this->adapter = $adapter;
         $this->url     = $url;
@@ -35,15 +37,13 @@ class HttpPlugHttpAdapterClient implements HttpClient
     /**
      * {@inheritdoc}
      */
-    public function request($method, $url, array $params = [])
+    public function request($method, $path, array $params = [])
     {
-        list($params, $files) = $this->fixParams($params);
+        list($params, $files) = $this->splitParams($params);
 
         try {
-            $body = $this->createBody($params, $files);
-
-            var_dump($body);die;
-            $response = $this->adapter->send($method, $this->url . $url, [], $body);
+            $body     = $this->createBody($params, $files);
+            $response = $this->adapter->send($method, $this->url . $path, [], $body);
 
             return json_decode($response->getBody(), true);
         } catch (PlugException $e) {
@@ -58,7 +58,7 @@ class HttpPlugHttpAdapterClient implements HttpClient
      *
      * @return array
      */
-    private function fixParams(array $params)
+    private function splitParams(array $params)
     {
         $parameters = [];
         $files      = [];
@@ -93,23 +93,21 @@ class HttpPlugHttpAdapterClient implements HttpClient
     /**
      * @param array $params
      * @param array $files
+     *
      * @return StreamInterface|null
      */
     private function createBody(array $params, array $files)
     {
         $streams = [];
 
-        if ($params) {
-            foreach ($params as $k => $v) {
-                $streams[] = ['name' => $k, 'contents' => $v];
-            }
+        foreach ($params as $k => $v) {
+            $streams[] = ['name' => $k, 'contents' => $v];
         }
 
         foreach ($files as $k => $file) {
-            $streams[] = ['name' => 'file', 'contents' => new LazyOpenStream($file, 'r'), 'filename' => $file];
+            $streams[] = ['name' => $k, 'contents' => new LazyOpenStream($file, 'r'), 'filename' => $file];
         }
 
-
-        return 0 < count($streams) ? new MultipartStream($streams) : null;
+        return count($streams) ? StreamFactoryDiscovery::find()->createStream(new MultipartStream($streams)) : null;
     }
 }

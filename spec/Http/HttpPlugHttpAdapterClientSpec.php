@@ -6,8 +6,8 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception\HttpException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Rs\VersionEye\Http\CommunicationException;
 use Psr\Http\Message\ResponseInterface;
+use Rs\VersionEye\Http\CommunicationException;
 
 class HttpPlugHttpAdapterClientSpec extends ObjectBehavior
 {
@@ -44,7 +44,7 @@ class HttpPlugHttpAdapterClientSpec extends ObjectBehavior
 
     public function it_performs_a_HTTP_request_to_the_given_url_with_params(HttpMethodsClient $client, ResponseInterface $response)
     {
-        $client->send('DELETE', 'http://lolcathost/bar', [], Argument::type('GuzzleHttp\Psr7\AppendStream'))->willReturn($response);
+        $client->send('DELETE', 'http://lolcathost/bar', [], Argument::type('Psr\Http\Message\StreamInterface'))->willReturn($response);
 
         $response->getBody()->willReturn('[]');
 
@@ -55,7 +55,7 @@ class HttpPlugHttpAdapterClientSpec extends ObjectBehavior
     {
         $file = tempnam(sys_get_temp_dir(), 'veye');
 
-        $client->send('DELETE', 'http://lolcathost/bar', [], Argument::type('GuzzleHttp\Psr7\AppendStream'))->willReturn($response);
+        $client->send('DELETE', 'http://lolcathost/bar', [], Argument::type('Psr\Http\Message\StreamInterface'))->willReturn($response);
 
         $response->getBody()->willReturn('[]');
 

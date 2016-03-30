@@ -5,7 +5,6 @@ namespace Rs\VersionEye;
 use Rs\VersionEye\Api\Api;
 use Rs\VersionEye\Http\ClientFactory;
 use Rs\VersionEye\Http\HttpClient;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Client for interacting with the API.
@@ -32,7 +31,7 @@ class Client
     public function __construct(HttpClient $client = null, $url = 'https://www.versioneye.com/api/v2/')
     {
         $this->client = $client;
-        $this->url = $url;
+        $this->url    = $url;
     }
 
     /**
